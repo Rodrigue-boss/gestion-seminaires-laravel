@@ -66,48 +66,47 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 
-
-# 📚 Plateforme de Gestion des Séminaires – IMSP
+# Plateforme de Gestion des Séminaires – IMSP
 
 Ce projet est une application Laravel développée dans le cadre d’un projet de conception web à l’IMSP.  
 Elle permet de gérer l’organisation, la soumission et la diffusion des séminaires de recherche par rôle (étudiant, présentateur, secrétaire scientifique).
 
 ---
 
-## ✅ Fonctionnalités principales
+## Fonctionnalités principales
 
-### 🎯 Authentification & Rôles
+### Authentification & Rôles
 - Inscription avec sélection du rôle : étudiant, présentateur ou secrétaire
 - Redirection dynamique vers une page d'accueil personnalisée après connexion
 - Middleware de sécurité par rôle
 
-### 📄 Soumission de séminaire
+### Soumission de séminaire
 - Les présentateurs soumettent une demande de séminaire avec date, heure, salle et thème
 - Séminaire enregistré avec statut "en attente"
 
-### ✅ Validation & Notification
+### Validation & Notification
 - Le secrétaire peut valider ou rejeter un séminaire
 - Une fois validé, un email est automatiquement envoyé au présentateur (incluant la date)
 
-### 🕙 Résumé à J–10
+### Résumé à J–10
 - Le présentateur peut envoyer ou modifier le résumé uniquement 10 jours avant la date de présentation
 
-### 📢 Publication à J–7
+### Publication à J–7
 - À J–7, le secrétaire peut "publier" le séminaire
 - Tous les étudiants reçoivent un email avec les détails : thème, date, résumé
 
-### 📎 Fichier de présentation
+### Fichier de présentation
 - Après la présentation, un fichier (.pdf, .pptx…) peut être uploadé par le présentateur ou le secrétaire
 - Les étudiants peuvent le télécharger depuis leur interface
 
-### 🔎 Autres fonctionnalités
+### Autres fonctionnalités
 - Tri par statut
 - Recherche par mot-clé
 - Export des séminaires au format PDF
 
 ---
 
-## 🛠 Technologies utilisées
+## Technologies utilisées
 
 - **Laravel 10**
 - **Blade** (moteur de templates Laravel)
@@ -117,7 +116,7 @@ Elle permet de gérer l’organisation, la soumission et la diffusion des sémin
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ```bash
 git clone <repo>
@@ -129,4 +128,9 @@ php artisan key:generate
 php artisan migrate
 php artisan storage:link
 php artisan serve
+
+
+# Auteur
+
+KLOTOE Michael
 
