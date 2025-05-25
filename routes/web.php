@@ -60,14 +60,16 @@ Route::get('/redirect', function () {
     }
 
     if ($role === 'secretaire') {
-        // Ajoute ce que tu veux passer si besoin
-        return view('roles.secretaire');
+        $seminaires = \App\Models\Seminaire::all();
+        return view('roles.secretaire', compact('seminaires'));
     }
 
+
     if ($role === 'étudiant') {
-        $seminaires = Seminaire::where('publie', true)->get();
-        return view('roles.etudiant', compact('seminaires'));
-    }
+    $seminaires = \App\Models\Seminaire::where('publie', true)->get();
+    return view('roles.etudiant', compact('seminaires'));
+}
+
 
     abort(403);
 })->middleware('auth');
@@ -85,7 +87,8 @@ Route::get('/secretaire', function () {
     return 'Bienvenue Étudiant';
 })->middleware(['auth', 'role:étudiant']);*/
 Route::get('/etudiant', function () {
-    return view('roles.etudiant');
+    $seminaires = \App\Models\Seminaire::where('publie', true)->get();
+    return view('roles.etudiant', compact('seminaires'));
 })->middleware(['auth', 'role:étudiant']);
 
 use App\Http\Controllers\SeminaireController;

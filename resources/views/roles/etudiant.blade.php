@@ -16,7 +16,7 @@
 
                 @if($seminaire->fichier)
                     <a href="{{ asset('storage/' . $seminaire->fichier) }}" target="_blank">
-                        📄 Télécharger la présentation
+                         Télécharger la présentation
                     </a>
                 @else
                     <em>Fichier non encore disponible</em>

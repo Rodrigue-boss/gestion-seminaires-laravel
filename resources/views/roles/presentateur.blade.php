@@ -15,6 +15,13 @@
             <a href="{{ route('seminaires.resume', $seminaire->id) }}">→ Envoyer / modifier résumé</a>
         </p>
     @endif
+    @if($seminaire->publie && !$seminaire->fichier)
+    <a href="{{ route('seminaires.fichier.form', $seminaire->id) }}">
+        📎 Ajouter le fichier de présentation
+    </a>
+    @elseif($seminaire->fichier)
+            <p>Fichier déjà ajouté ✅</p>
+    @endif
 @endforeach
 
 <form method="POST" action="{{ route('logout') }}">
