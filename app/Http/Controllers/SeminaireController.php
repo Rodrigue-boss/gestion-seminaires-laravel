@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\SeminaireValideMail;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Carbon;
 
 use App\Models\User;
 use App\Mail\NotificationEtudiantMail;
 
+use Carbon\Carbon;
 
 class SeminaireController extends Controller
 {
@@ -27,7 +27,6 @@ class SeminaireController extends Controller
     {
         $request->validate([
             'titre' => 'required|string|max:255',
-            'resume' => 'required|string',
             'date' => 'required|date',
             'heure_debut' => 'required',
             'heure_fin' => 'required',
@@ -37,7 +36,6 @@ class SeminaireController extends Controller
 
         Seminaire::create([
             'titre' => $request->titre,
-            'resume' => $request->resume,
             'date' => $request->date,
             'heure_debut' => $request->heure_debut,
             'heure_fin' => $request->heure_fin,
@@ -77,6 +75,10 @@ class SeminaireController extends Controller
 
    public function valider($id)
    {
+      if (auth()->user()->role !== 'secretaire') {
+          abort(403, 'Seul le secrétaire peut valider un séminaire.');
+      }
+
       $seminaire = \App\Models\Seminaire::with('user')->findOrFail($id);
       $seminaire->statut = 'accepté';
       $seminaire->save();
@@ -135,28 +137,66 @@ public function editerResume($id)
     return view('seminaires.resume', compact('seminaire'));
 }
 
+
 public function mettreAJourResume(Request $request, $id)
 {
-    $request->validate([
-        'resume' => 'required|string|min:10'
-    ]);
+    
+    $seminaire = Seminaire::findOrFail($id);
 
-    $seminaire = \App\Models\Seminaire::findOrFail($id);
-
-    if ($seminaire->user_id !== auth()->id()) {
-        abort(403);
+    // Vérifie que l'utilisateur est bien le propriétaire
+    if (auth()->id() !== $seminaire->user_id) {
+        abort(403, 'Accès interdit.');
     }
 
-    $seminaire->resume = $request->resume;
-    $seminaire->save();
+    // Vérifie que la date est à J–10 ou moins
+    $jmoins10 = Carbon::parse($seminaire->date)->subDays(10);
+    if (Carbon::now()->lessThan($jmoins10)) {
+        return back()->with('error', 'Vous ne pouvez soumettre un résumé qu’à partir de J–10.');
+    }
 
-    return redirect()->route('seminaires.index')->with('success', 'Résumé mis à jour avec succès.');
+    // Validation et mise à jour
+    $request->validate([
+        'resume' => 'required|string|min:10',
+    ]);
+
+    /*$seminaire->update([
+    'resume' => $request->input('resume'),
+    ]);*/
+    /*$seminaire->forceFill([
+    'resume' => $request->input('resume'),
+    ]);
+    \DB::listen(function ($query) {
+    logger($query->sql);
+    logger($query->bindings);
+    });*/
+
+    /*$seminaire->save();*/
+    \DB::table('seminaires')
+    ->where('id', $id)
+    ->update([
+        'resume' => $request->input('resume'),
+        'updated_at' => now(),
+    ]);
+
+    // Recharge l'objet avec les données fraîches
+    $seminaire->refresh();
+    return back()->with('success', 'Résumé mis à jour avec succès.');
 }
+
 
 
 public function publier($id)
 {
+    if (auth()->user()->role !== 'secretaire') {
+        abort(403, 'Seul le secrétaire peut publier un séminaire.');
+    }
     $seminaire = \App\Models\Seminaire::findOrFail($id);
+    
+    $jmoins7 = \Carbon\Carbon::parse($seminaire->date)->subDays(7);
+    if (now()->lessThan($jmoins7)) {
+         return back()->with('error', 'La publication est autorisée seulement à partir de J–7.');
+    }
+
     $seminaire->publie = true;
     $seminaire->save();
 
@@ -191,6 +231,27 @@ public function uploadFichier(Request $request, $id)
     $seminaire->save();
 
     return redirect()->route('seminaires.index')->with('success', 'Fichier de présentation ajouté avec succès.');
+}
+
+
+public function indexPresentateur()
+{
+    $user = auth()->user();
+
+    $seminaires = \App\Models\Seminaire::where('user_id', $user->id)->get();
+
+    foreach ($seminaires as $seminaire) {
+        $seminaire->accessible_resume = false;
+
+        if ($seminaire->date) {
+            $jmoins10 = Carbon::parse($seminaire->date)->subDays(10);
+            if (Carbon::now()->greaterThanOrEqualTo($jmoins10)) {
+                $seminaire->accessible_resume = true;
+            }
+        }
+    }
+
+    return view('roles.presentateur', compact('seminaires'));
 }
 
 

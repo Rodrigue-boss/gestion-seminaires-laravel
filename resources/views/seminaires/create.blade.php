@@ -16,9 +16,6 @@
         <label>Titre :</label><br>
         <input type="text" name="titre" required><br><br>
 
-        <label>Résumé :</label><br>
-        <textarea name="resume" required></textarea><br><br>
-
         <label>Date :</label><br>
         <input type="date" name="date" required><br><br>
 

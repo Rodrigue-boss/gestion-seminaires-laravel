@@ -9,6 +9,7 @@
 
     <form action="{{ route('seminaires.resume.update', $seminaire->id) }}" method="POST">
         @csrf
+        @method('PUT')
         <label for="resume">Résumé :</label><br>
         <textarea name="resume" rows="6">{{ old('resume', $seminaire->resume) }}</textarea><br>
 

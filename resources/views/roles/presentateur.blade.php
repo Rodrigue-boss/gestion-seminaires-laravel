@@ -15,6 +15,20 @@
             <a href="{{ route('seminaires.resume', $seminaire->id) }}">→ Envoyer / modifier résumé</a>
         </p>
     @endif
+    @if($seminaire->accessible_resume)
+    <form action="{{ route('seminaires.resume.update', $seminaire->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <textarea name="resume" placeholder="Entrez le résumé">{{ $seminaire->resume }}</textarea>
+        <button type="submit">Envoyer le résumé</button>
+    </form>
+@else
+    <p style="color: grey;">
+        Le résumé pourra être soumis à partir du 
+        <strong>{{ \Carbon\Carbon::parse($seminaire->date)->subDays(10)->format('d/m/Y') }}</strong>
+    </p>
+@endif
+
     @if($seminaire->publie && !$seminaire->fichier)
     <a href="{{ route('seminaires.fichier.form', $seminaire->id) }}">
         📎 Ajouter le fichier de présentation

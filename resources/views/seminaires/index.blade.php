@@ -45,7 +45,13 @@
             @foreach($seminaires as $seminaire)
                 <tr>
                     <td>{{ $seminaire->titre }}</td>
-                    <td>{{ $seminaire->resume }}</td>
+                    <td>
+                        @if($seminaire->resume)
+                        {{ $seminaire->resume }}
+                        @else
+                         <em style="color: gray;">Non encore soumis</em>
+                        @endif
+                    </td>
                     <td>{{ $seminaire->date }}</td>
                     <td>{{ $seminaire->heure_debut }} - {{ $seminaire->heure_fin }}</td>
                     <td>{{ $seminaire->salle }}</td>
@@ -59,31 +65,39 @@
                     </td>
                     <td>{{ $seminaire->statut }}</td>
                     <td>
-                       @if(Auth::user()->role === 'secretaire')
-                       @if($seminaire->statut === 'en attente')
-                       <form action="{{ route('seminaires.valider', $seminaire->id) }}" method="POST" style="display:inline;">
-                          @csrf
-                          <button type="submit">Valider</button>
-                       </form>
+                       @auth
+    @if(Auth::user()->role === 'secretaire')
+        <!-- Bouton Valider -->
+        @if($seminaire->statut === 'en attente')
+            <form method="POST" action="{{ route('seminaires.valider', $seminaire->id) }}" style="display:inline">
+                @csrf
+                <button type="submit" class="btn btn-success">Valider</button>
+            </form>
+            
+            <form method="POST" action="{{ route('seminaires.rejeter', $seminaire->id) }}" style="display:inline">
+                @csrf
+                <button type="submit" class="btn btn-success">Rejeter</button>
+            </form>
+            @else
+            <em>Aucune action</>
+        @endif
 
-                       <form action="{{ route('seminaires.rejeter', $seminaire->id) }}" method="POST" style="display:inline;">
-                          @csrf
-                          <button type="submit">Rejeter</button>
-                       </form>
-                       @else
-                      <em>Aucune action</em>
-                        @endif
-                         @else
-                     <em>N/A</em>
-                     @endif
-                     @if($seminaire->statut === 'accepté' && !$seminaire->publie)
-                     <form action="{{ route('seminaires.publier', $seminaire->id) }}" method="POST" style="margin-top: 5px;">
-                       @csrf
-                      <button type="submit">Publier</button>
-                     </form>
-                     @endif
+        <!-- Bouton Publier -->
+        @php
+            $jmoins7 = \Carbon\Carbon::parse($seminaire->date)->subDays(7);
+        @endphp
 
-                </td>
+        @if($seminaire->statut === 'accepté' && !$seminaire->publie && \Carbon\Carbon::now()->greaterThanOrEqualTo($jmoins7))
+            <form method="POST" action="{{ route('seminaires.publier', $seminaire->id) }}" style="display:inline">
+                @csrf
+                <button type="submit" class="btn btn-primary">Publier</button>
+            </form>
+        @endif
+    @endif
+@endauth
+
+
+                  </td>
 
                 </tr>
             @endforeach

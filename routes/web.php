@@ -137,4 +137,11 @@ Route::post('/seminaires/{id}/fichier', [SeminaireController::class, 'uploadFich
     ->middleware(['auth', 'role:présentateur,secretaire'])
     ->name('seminaires.fichier.upload');
 
+Route::put('/seminaires/{id}/resume', [\App\Http\Controllers\SeminaireController::class, 'mettreAJourResume'])
+    ->name('seminaires.resume.update')
+    ->middleware(['auth', 'role:présentateur']);
+
+Route::put('/seminaires/{id}/resume', [SeminaireController::class, 'mettreAJourResume'])
+    ->name('seminaires.resume.update')
+    ->middleware(['auth', 'role:présentateur']);
 
