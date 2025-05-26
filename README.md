@@ -130,6 +130,49 @@ php artisan storage:link
 php artisan serve
 
 
+Installation et compilation du projet Laravel
+
+1. **Cloner le projet**
+   ```bash
+   git clone https://github.com/Rodrigue-boss/gestion-seminaires-laravel.git
+   cd gestion-seminaires
+
+Installer les dépendances PHP
+
+composer install
+
+Copier le fichier .env
+
+cp .env.example .env
+php artisan key:generate
+
+Créer la base de données MySQL
+
+Connectez-vous à MySQL :
+mysql -u root -p
+Puis entrez :
+CREATE DATABASE seminaires;
+EXIT;
+
+Configurer .env pour votre base et Mailtrap
+
+Migrer la base:
+php artisan migrate
+
+Compiler les fichiers front-end:
+npm install
+npm run dev
+
+Créer le lien vers le dossier storage:
+php artisan storage:link
+
+Lancer le serveur:
+php artisan serve
+
+Accéder au projet : http://127.0.0.1:8000
+
+
+
 # Auteur
 
 KLOTOE Michael
