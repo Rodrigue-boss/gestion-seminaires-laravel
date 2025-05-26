@@ -66,114 +66,101 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 
-# Plateforme de Gestion des Séminaires – IMSP
+# 🎓 Plateforme Web de Gestion des Séminaires — IMSP
 
-Ce projet est une application Laravel développée dans le cadre d’un projet de conception web à l’IMSP.  
-Elle permet de gérer l’organisation, la soumission et la diffusion des séminaires de recherche par rôle (étudiant, présentateur, secrétaire scientifique).
-
----
-
-## Fonctionnalités principales
-
-### Authentification & Rôles
-- Inscription avec sélection du rôle : étudiant, présentateur ou secrétaire
-- Redirection dynamique vers une page d'accueil personnalisée après connexion
-- Middleware de sécurité par rôle
-
-### Soumission de séminaire
-- Les présentateurs soumettent une demande de séminaire avec date, heure, salle et thème
-- Séminaire enregistré avec statut "en attente"
-
-### Validation & Notification
-- Le secrétaire peut valider ou rejeter un séminaire
-- Une fois validé, un email est automatiquement envoyé au présentateur (incluant la date)
-
-### Résumé à J–10
-- Le présentateur peut envoyer ou modifier le résumé uniquement 10 jours avant la date de présentation
-
-### Publication à J–7
-- À J–7, le secrétaire peut "publier" le séminaire
-- Tous les étudiants reçoivent un email avec les détails : thème, date, résumé
-
-### Fichier de présentation
-- Après la présentation, un fichier (.pdf, .pptx…) peut être uploadé par le présentateur ou le secrétaire
-- Les étudiants peuvent le télécharger depuis leur interface
-
-### Autres fonctionnalités
-- Tri par statut
-- Recherche par mot-clé
-- Export des séminaires au format PDF
+Ce projet est une application web réalisée avec **Laravel 10** permettant la gestion complète des séminaires au sein des entités de recherche de l’IMSP. Elle respecte un ensemble de règles de gestion précises basées sur le rôle de chaque utilisateur et le calendrier des présentations.
 
 ---
 
-## Technologies utilisées
+## 🧩 Fonctionnalités principales
 
-- **Laravel 10**
-- **Blade** (moteur de templates Laravel)
-- **MySQL**
-- **Mailtrap** (test des emails)
-- **CSS personnalisé** (style global)
+- Authentification avec rôles : étudiant, présentateur, secrétaire
+- Soumission d’un séminaire par un présentateur
+- Validation ou rejet par le secrétaire
+- Envoi du résumé par le présentateur à **J–10**
+- Publication officielle par le secrétaire à **J–7**
+- Notification email aux étudiants à J–7 (via Mailtrap ou log)
+- Upload du fichier de présentation
+- Téléchargement du fichier par les étudiants
+- Filtrage des séminaires par statut
+- Export PDF de la liste des séminaires
+- Recherche par titre, salle ou nom du présentateur
 
 ---
 
-## Installation
+## 🛠️ Technologies utilisées
+
+- Laravel 10
+- MySQL
+- Laravel Breeze
+- Laravel Fortify
+- Laravel Vite + TailwindCSS
+- Mailtrap (simulation des emails)
+- Barryvdh DomPDF (export PDF)
+- Blade (moteur de templates Laravel)
+
+---
+
+## 📦 Installation et compilation du projet
+
+### 1. Cloner le projet
 
 ```bash
-git clone <repo>
+git clone https://github.com/Rodrigue-boss/gestion-seminaires-laravel.git
 cd gestion-seminaires
+
+2. Installer les dépendances
+
 composer install
 npm install && npm run dev
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-php artisan storage:link
-php artisan serve
 
-
-Installation et compilation du projet Laravel
-
-1. **Cloner le projet**
-   ```bash
-   git clone https://github.com/Rodrigue-boss/gestion-seminaires-laravel.git
-   cd gestion-seminaires
-
-Installer les dépendances PHP
-
-composer install
-
-Copier le fichier .env
+3. Créer le fichier .env
 
 cp .env.example .env
+Configure les accès MySQL dans .env :
+
+DB_DATABASE=seminaires
+DB_USERNAME=root
+DB_PASSWORD=motdepasse
+
+4. Générer la clé de l'application
+
 php artisan key:generate
 
-Créer la base de données MySQL
+5. Lancer les migrations (création de la base de données)
 
-Connectez-vous à MySQL :
-mysql -u root -p
-Puis entrez :
-CREATE DATABASE seminaires;
-EXIT;
-
-Configurer .env pour votre base et Mailtrap
-
-Migrer la base:
 php artisan migrate
 
-Compiler les fichiers front-end:
-npm install
-npm run dev
+6.Créer le lien vers le dossier storage:
 
-Créer le lien vers le dossier storage:
 php artisan storage:link
 
-Lancer le serveur:
+7. Démarrer le serveur de développement
+
 php artisan serve
 
 Accéder au projet : http://127.0.0.1:8000
 
 
+👥 Rôles et navigation
 
-# Auteur
+| Rôle         | Page d’accueil                 | Fonctionnalités principales                       |
+| ------------ | -----------------------------  | ------------------------------------------------- |
+| Présentateur | `/redirect` → `/presentateur` | Soumettre, modifier résumé, uploader fichier      |
+| Secrétaire   | `/redirect` → `/secretaire`   | Valider, rejeter, publier à J–7, envoyer emails   |
+| Étudiant     | `/redirect` → `/etudiant`     | Voir les séminaires acceptés, télécharger fichier |
 
-KLOTOE Michael
 
+🖼️ Captures d’écran
+Les principales captures d’écran du projet se trouvent dans le dossier /captures.
+
+📝 Rapport du projet
+Le rapport au format PDF et ODT est inclus dans le dépôt :
+
+Rapport_projet_Michael_KLOTOE.pdf
+
+Rapport_projet_Michael_KLOTOE.odt
+
+📄 Licence
+Ce projet est à usage académique dans le cadre d’un TP de Conception Web à l’IMSP.
+Développé par Michael KLOTOE — Licence 3 TIC, IMSP.
